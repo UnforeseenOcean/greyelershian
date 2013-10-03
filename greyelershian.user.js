@@ -1,5 +1,8 @@
 // ==UserScript==
+// @name Greyelershian
+// @description a more sedate notification label on Google sites
 // @match http://*.google.com/*
+// @downloadURL https://raw.github.com/rektide/greyelershian/master/greyelershian.user.js
 // ==/UserScript==
 
 function extractProperty(lookups,property){
