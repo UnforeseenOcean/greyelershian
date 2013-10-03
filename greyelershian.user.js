@@ -2,11 +2,13 @@
 // @name Greyelershian
 // @description a more sedate notification label on Google sites
 // @match http://*.google.com/*
+// @match https://*.google.com/*
 // @downloadURL https://raw.github.com/rektide/greyelershian/master/greyelershian.user.js
 // ==/UserScript==
+(function(){
 
 function extractProperty(lookups,property){
-	lookups.forEach(_makeExtractProperty(property)
+	lookups.forEach(_makeExtractProperty(property))
 	return lookups
 }
 function _makeExtractProperty(prop){
@@ -27,11 +29,11 @@ function _validate(val,key,arr){
 //validateHas(els)
 //var colors= extractProperty("background-color")
 // OR DONT
-var colors= {label: "rgb(203, 68, 55)"
+var colors= {label: "rgb(203, 68, 55)",
   icon: "rgb(102, 102, 102)"}
 
-var sheet= "\
-.gb_jb { background-color: "+ colors.icon +"; transition: background-color 1.2s; }; \ 
+var sheet= " \
+.gb_jb { background-color: "+ colors.icon +"; transition: background-color 1.2s; }; \
 .gb_jb:hover { background-color: "+ colors.label +"; }; \
 ";
 
@@ -39,4 +41,4 @@ var sheet= "\
 var styleSheet= document.createElement("style")
 document.getElementsByTagName('head')[0].appendChild(styleSheet)
 
-})(
+})()
