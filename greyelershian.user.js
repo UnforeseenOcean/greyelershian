@@ -20,6 +20,7 @@ function validateHas(lookups){
 	lookups.forEach(_validate)
 }
 function _validate(val,key,arr){
+	//assert(val)
 	if(!val)
 		console.error("Missing element for key: ",key)
 }
@@ -32,13 +33,15 @@ function _validate(val,key,arr){
 var colors= {label: "rgb(203, 68, 55)",
   icon: "rgb(102, 102, 102)"}
 
-var sheet= " \
-.gb_jb { background-color: "+ colors.icon +"; transition: background-color 1.2s; }; \
-.gb_jb:hover { background-color: "+ colors.label +"; }; \
-";
-
-// DOMfunky https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet.insertRule
+// DOMfunky https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet.insertRule this is so filthy ugly awful ugg
 var styleSheet= document.createElement("style")
-document.getElementsByTagName('head')[0].appendChild(styleSheet)
+styleSheet.id= "greyelershianSheet"
+document.body.appendChild(styleSheet)
+styleSheet= styleSheet.sheet
+var rule0= ".gb_jb { background-color: "+ colors.icon +"; transition: background-color 1.2s }",
+  rule1= ".gb_jb:hover { background-color: "+ colors.label +" }"
+//console.log("adding",rule1,rule2)
+styleSheet.insertRule(rule0,0)
+styleSheet.insertRule(rule1,1)
 
 })()
