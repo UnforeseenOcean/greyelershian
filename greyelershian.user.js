@@ -71,7 +71,6 @@ var rules= [
   "."+classLink+":hover ."+classLabel+" {background-color:"+red+"}"
 ]
 rules.forEach(function(rule){
-	console.log(rule)
 	styleSheet.insertRule(rule,0)
 })
 
