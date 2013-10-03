@@ -30,17 +30,17 @@ function _validate(val,key,arr){
 //validateHas(els)
 //var colors= extractProperty("background-color")
 // OR DONT
-var colors= {label: "rgb(203, 68, 55)",
-  icon: "rgb(102, 102, 102)"}
+var colors= {label: "rgb(203,68,55)",
+  icon: "rgb(102,102,102)"}
 
 // DOMfunky https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet.insertRule
 var styleSheet= document.createElement("style")
+styleSheet.type = "text/css"
 styleSheet.id= "greyelershianSheet"
 document.body.appendChild(styleSheet)
 styleSheet= styleSheet.sheet
-var rule0= ".gb_jb { background-color: "+ colors.icon +"; transition: background-color 1.2s }",
-  rule1= ".gb_jb:hover { background-color: "+ colors.label +" }"
-//console.log("adding",rule1,rule2)
+var rule0= ".gb_ka {background-color: "+ colors.icon +" !important; transition:background-color 0.8s ease-out}",
+  rule1= ".gb_ka:hover {background-color: "+ colors.label +" !important}"
 styleSheet.insertRule(rule0,0)
 styleSheet.insertRule(rule1,1)
 
