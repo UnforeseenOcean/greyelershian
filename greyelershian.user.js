@@ -7,6 +7,10 @@
 // ==/UserScript==
 (function(){
 
+// PHASE 0: seed
+
+var red= "rgb(203, 68, 55)"
+
 // PHASE 1: find the responsible CSS rules
 
 var some= Array.prototype.some
@@ -33,7 +37,7 @@ function findRule(key,value){
 	some.call(document.styleSheets,function(sheet){return some.call(sheet.rules,matchMeta)})
 	return rv
 }
-var rule= findRule("background-color","rgb(203, 68, 55)")
+var rule= findRule("background-color",red)
 if(!rule){
 	console.error("could not find a red notification label")
 	return
@@ -43,28 +47,7 @@ if(!rule){
 
 var label= document.querySelector(rule.selectorText),
   link= label.parentNode,
-  bar= link.parentNode.parentNode.parentNode.parentNode.parentNode
-
-// PHASE 3: pull their classes and colors (we seeded this far from label's red)
-
-function _makeExtractProperty(property){
-	return function _extractProperty(val,key,arr){
-		return val?val[property]:undefined
-	}
-}
-
-var colors= {},
-  classes= {};
-(function(){
-	var _set= [label, link, bar],
-	  _names= ["label", "link", "bar"],
-	  _colors= _set.map(window.getComputedStyle).map(_makeExtractProperty("background-color")),
-	  _classes= _set.map(_makeExtractProperty("classList")).map(_makeExtractProperty(0))
-	for(var i in _set){
-		colors[_names[i]]= _colors[i]
-		classes[_names[i]] = _classes[i]
-	}
-})()
+  previous= label.previousSibling
 
 // PHASE 4: append a stylesheet
 
@@ -76,12 +59,19 @@ document.body.appendChild(styleSheet)
 
 // PHASE 5: add new rules
 
+var grey= window.getComputedStyle(previous)["color"],
+  classLink= link.classList[0],
+  classLabel= label.classList[0]
+
+grey= "rgba("+grey.substring(4,grey.length-1)+", 0.3236)"
+
 styleSheet= styleSheet.sheet
 var rules= [
-  "."+classes.label+" {background-color:"+colors.bar+"; transition:background-color 0.8s ease-out}",
-  "."+classes.link+":hover ."+classes.label+" {background-color:"+colors.label+"}"
+  "."+classLabel+" {background-color:"+grey+"; transition:background-color 0.8s ease-out}",
+  "."+classLink+":hover ."+classLabel+" {background-color:"+red+"}"
 ]
 rules.forEach(function(rule){
+	console.log(rule)
 	styleSheet.insertRule(rule,0)
 })
 
