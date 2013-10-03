@@ -7,41 +7,82 @@
 // ==/UserScript==
 (function(){
 
-function extractProperty(lookups,property){
-	lookups.forEach(_makeExtractProperty(property))
-	return lookups
-}
-function _makeExtractProperty(prop){
-	function _extractProperty(val,key,arr){
-		arr[key]= val?val[property]:undefined
+// PHASE 1: find the responsible CSS rules
+
+var some= Array.prototype.some
+function findRule(key,value){
+	var rv
+	function matchRule(rule){
+		for(var i= 0; i< rule.style.length; ++i){
+			var name= rule.style[i]
+			if(name == key && rule.style[name].toLowerCase().indexOf(value) != -1)
+			{
+				rv= rule
+				return true
+			}
+		}
 	}
+	function matchMeta(meta){
+		if(meta.style)
+			return matchRule(meta)
+		else if(meta.cssRules)
+			return some.call(meta.cssRules,matchMeta)
+		else
+			console.log("what is this?",meta)
+	}
+	some.call(document.styleSheets,function(sheet){return some.call(sheet.rules,matchMeta)})
+	return rv
 }
-function validateHas(lookups){
-	lookups.forEach(_validate)
-}
-function _validate(val,key,arr){
-	//assert(val)
-	if(!val)
-		console.error("Missing element for key: ",key)
+var rule= findRule("background-color","rgb(203, 68, 55)")
+if(!rule){
+	console.error("could not find a red notification label")
+	return
 }
 
-// VALIDATE AND EXTRACT DATA
-//var els= lookupSelectors(concerns)
-//validateHas(els)
-//var colors= extractProperty("background-color")
-// OR DONT
-var colors= {label: "rgb(203,68,55)",
-  icon: "rgb(102,102,102)"}
+// PHASE 2: retrieve the relevant elements
+
+var label= document.querySelector(rule.selectorText),
+  link= label.parentNode,
+  bar= link.parentNode.parentNode.parentNode.parentNode.parentNode
+
+// PHASE 3: pull their classes and colors (we seeded this far from label's red)
+
+function _makeExtractProperty(property){
+	return function _extractProperty(val,key,arr){
+		return val?val[property]:undefined
+	}
+}
+
+var colors= {},
+  classes= {};
+(function(){
+	var _set= [label, link, bar],
+	  _names= ["label", "link", "bar"],
+	  _colors= _set.map(window.getComputedStyle).map(_makeExtractProperty("background-color")),
+	  _classes= _set.map(_makeExtractProperty("classList")).map(_makeExtractProperty(0))
+	for(var i in _set){
+		colors[_names[i]]= _colors[i]
+		classes[_names[i]] = _classes[i]
+	}
+})()
+
+// PHASE 4: append a stylesheet
 
 // DOMfunky https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet.insertRule
 var styleSheet= document.createElement("style")
 styleSheet.type = "text/css"
 styleSheet.id= "greyelershianSheet"
 document.body.appendChild(styleSheet)
+
+// PHASE 5: add new rules
+
 styleSheet= styleSheet.sheet
-var rule0= ".gb_ka {background-color: "+ colors.icon +" !important; transition:background-color 0.8s ease-out}",
-  rule1= ".gb_ka:hover {background-color: "+ colors.label +" !important}"
-styleSheet.insertRule(rule0,0)
-styleSheet.insertRule(rule1,1)
+var rules= [
+  "."+classes.label+" {background-color:"+colors.bar+"; transition:background-color 0.8s ease-out}",
+  "."+classes.link+":hover ."+classes.label+" {background-color:"+colors.label+"}"
+]
+rules.forEach(function(rule){
+	styleSheet.insertRule(rule,0)
+})
 
 })()
