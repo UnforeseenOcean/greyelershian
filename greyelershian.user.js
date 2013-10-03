@@ -1,3 +1,7 @@
+// ==UserScript==
+// @match http://*.google.com/*
+// ==/UserScript==
+
 function extractProperty(lookups,property){
 	lookups.forEach(_makeExtractProperty(property)
 	return lookups
