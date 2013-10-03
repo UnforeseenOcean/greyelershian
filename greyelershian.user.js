@@ -33,7 +33,7 @@ function _validate(val,key,arr){
 var colors= {label: "rgb(203, 68, 55)",
   icon: "rgb(102, 102, 102)"}
 
-// DOMfunky https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet.insertRule this is so filthy ugly awful ugg
+// DOMfunky https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet.insertRule
 var styleSheet= document.createElement("style")
 styleSheet.id= "greyelershianSheet"
 document.body.appendChild(styleSheet)
