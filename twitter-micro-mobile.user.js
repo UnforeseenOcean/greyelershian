@@ -17,6 +17,7 @@
     GM_addStyle('._2wLtAyps, ._3hdqTVua>*, ._32ievKrg { margin-top: 0.3rem; };');
     // smaller images (WIP, not consistent)
     GM_addStyle('._2_y4lIt4, ._3i5pgeTp { width: 60%; };');
+    GM_addStyle('._3Ko_vUO1 { max-width: 720px; };');
     // full width
     GM_addStyle('@media screen and (min-width:600px){ div._3xujJ3kq { max-width: none!important; };}');
     // de-bold names
